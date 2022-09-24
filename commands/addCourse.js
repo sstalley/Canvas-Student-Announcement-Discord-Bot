@@ -16,15 +16,27 @@ const meta = {
 /* https://www.sqlitetutorial.net/sqlite-nodejs/connect/ */
 module.exports = {
   commands: ["addCourse", "ac"],
-  expectedArgs: ["<CourseID>"],
+  expectedArgs: ["<CourseID> <ChannelID>"],
   permissionError: "You Have no permissions to run this command",
   minArgs: 1,
-  maxArgs: 1,
-  callback: (message, arguments, text) => {
+  maxArgs: 2,
+  callback: (message, arguments, text, client) => {
     
     console.log("AddCourse command executed! ")
+    console.log("arguments:", arguments);
     const content = Number(arguments[0]);
     const dbPath = path.resolve(__dirname, "db/memory.db");
+
+    // Use Specified Channel ID, otherwise just use this channel
+    if (arguments.length > 1) {
+      channelid = arguments[1];
+      console.log("using specified channel:", channelid);
+      channel = client.channels.fetch(channelid)
+      console.log("found channel:", channel)
+    } else {
+      console.log("using default channel:", message.channel.id);
+      channel = message.channel
+    }
 
     if (Number.isInteger(content)) {
 
@@ -35,15 +47,15 @@ module.exports = {
         const data = response.data;
         const status = response.status;
 
-        //console.log(data);
-        //console.log(message.channel.id);
-        //console.log(status);
+        console.log("data:", data);
+        console.log("channel.id:", channel.id);
+        console.log("status:", status);
             
         //check if request is oke
         if (status === 200) {
           //return confirmation that cours is added to watchlist
           message.channel.send(
-            data.name + "  has been added to watch list for channel : **" +  message.channel.name + "**");
+            data.name + "  has been added to watch list for channel : **" +  channel.name + "**");
 
           //open db 
           let db = new sqlite3.Database(dbPath, sqlite3.OPEN_READWRITE, (err) => {
@@ -60,7 +72,7 @@ module.exports = {
 
           db.serialize(() => {
             //Insert course id and channel id to watchlist
-            db.run(`INSERT INTO watchlist (channel_id, course_id) VALUES (` + message.channel.id + `,` + data.id + `)`, (err, row) => {
+            db.run(`INSERT INTO watchlist (channel_id, course_id) VALUES (` + channel.id + `,` + data.id + `)`, (err, row) => {
                 if (err) {
                   
                   console.error(err.message);
