@@ -11,5 +11,5 @@ module.exports = {
     
   },
   requiredRoles: [],
-  permissions: ["ADMINISTRATOR"],
+  permissions: [],
 };
