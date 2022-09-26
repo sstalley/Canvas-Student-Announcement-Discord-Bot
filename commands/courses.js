@@ -45,12 +45,10 @@ module.exports = {
           
           //embeded msg of all available courses
           const exampleEmbed = new Discord.MessageEmbed()
-            .setAuthor("NxT Media Technologie", "https://play-lh.googleusercontent.com/2_M-EEPXb2xTMQSTZpSUefHR3TjgOCsawM3pjVG47jI-BrHoXGhKBpdEHeLElT95060B=s180", "https://canvas.kdg.be")
             .setColor("#00FFFF")
             .setTitle("Courses available ATM!")
             .setDescription(
               "All the courses that can be added to the watchlist so it can be watched for announcements. There are only " + row.length + " courses that can be added so far.")
-            .setThumbnail("https://scontent-bru2-1.xx.fbcdn.net/v/t1.0-9/46488296_2389319437749114_6505762562989096960_n.jpg?_nc_cat=111&ccb=2&_nc_sid=09cbfe&_nc_ohc=a58UoF9Yv_cAX-4H65n&_nc_ht=scontent-bru2-1.xx&oh=c1b0d140980bd3dc2a474ec029a01170&oe=5FF9B2D6")
             .setTimestamp();
 
            //check if arguments is enterd or if arguments = 1 so we know it is on page 1  

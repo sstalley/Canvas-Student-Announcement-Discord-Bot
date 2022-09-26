@@ -49,7 +49,6 @@ module.exports = {
         const data = response.data;
         const status = response.status;
 
-        console.log("data:", data);
         console.log("status:", status);
             
         //check if request is oke
@@ -58,17 +57,11 @@ module.exports = {
           message.channel.send(
             data.name + "  has been added to watch list for channel : **" +  message.channel.name + "**");
 
-          console.log("numargs (again):", numargs);
           if (numargs > 1) {
             client.channels.fetch(channelid).then(channel => {
-              console.log("channel again:", channel);
               channel.send("Updates from " + data.name + " will now be tracked on this channel.");
-            }).catch(error => {if(error.code == 50013) {
-              console.log("Error: do not have permissions to post to this channel")
-            }});
+            });
           }
-
-
 
           //open db 
           let db = new sqlite3.Database(dbPath, sqlite3.OPEN_READWRITE, (err) => {

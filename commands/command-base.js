@@ -77,10 +77,8 @@ module.exports = (client, commandOptions) => {
     //get info from the posted msg in discord, like server, content of msg, ...
     const { member, content, guild } = message;
 
-
     for (const alias of commands) {
       const command = `${prefix}${alias.toLowerCase()}`;
-
 
       if (content.toLowerCase().startsWith(`${command} `) || content.toLowerCase() === command) {
 
