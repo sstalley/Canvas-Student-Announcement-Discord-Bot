@@ -26,17 +26,17 @@ module.exports = {
     console.log("arguments:", arguments);
     const content = Number(arguments[0]);
     const dbPath = path.resolve(__dirname, "db/memory.db");
+    const numargs = arguments.length
 
     // Use Specified Channel ID, otherwise just use this channel
-    console.log("arguments.length:", arguments.length);
-    if (arguments.length > 1) {
+    console.log("numargs:", numargs);
+    if (numargs > 1) {
       channelid = arguments[1];
       console.log("using custom channel");
       client.channels.fetch(channelid).then(channel => console.log("found channel:", channel.name, "in server", channel.guild.name));
 
     } else {
       channelid=message.channel.id
-      channel = message.channel
     }
     console.log("channelid:", channelid);
 
@@ -58,10 +58,14 @@ module.exports = {
           message.channel.send(
             data.name + "  has been added to watch list for channel : **" +  message.channel.name + "**");
 
-          console.log("arguments.length (again):", arguments.length);
-          if (arguments.length > 1) {
-            client.channels.fetch(channelid).then(channel => console.log("channel again:", channel));
-            client.channels.fetch(channelid).then(channel => channel.send("Updates from " + data.name + " will now be tracked on this channel."));
+          console.log("numargs (again):", numargs);
+          if (numargs > 1) {
+            client.channels.fetch(channelid).then(channel => {
+              console.log("channel again:", channel);
+              channel.send("Updates from " + data.name + " will now be tracked on this channel.");
+            }).catch(error => {if(error.code == 50013) {
+              console.log("Error: do not have permissions to post to this channel")
+            }});
           }
 
 
