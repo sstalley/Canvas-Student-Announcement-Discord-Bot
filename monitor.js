@@ -28,6 +28,10 @@ module.exports = (client, courseAnn) => {
         }
       });
 
+
+      console.log("running monitor...");
+      console.log("response:", response);
+      console.log("data:", data);
       //select posted at and course id from courses table
       db.serialize(() => {
         //Get posted_at, course_id in a array
@@ -41,11 +45,16 @@ module.exports = (client, courseAnn) => {
           //Reverse JSON data order from API Canvas to show oldest posts first
           var rev = data.reverse();
 
+          console.log("rev:", rev);
+
           //Loop trough dtabase with course with all the API GET results to post on the right channel
           rev.forEach((ann) => {
+            console.log("running monitor for ann:", ann);
 
             row.forEach((course) => {
               if (ann.context_code.replace("course_", "") === JSON.stringify(course.course_id) && course.posted_at < ann.posted_at) {
+
+                console.log("running monitor for course:", course);
 
                 
                 //Replace default markup html tags of canvas by discord embed syntax
@@ -73,15 +82,7 @@ module.exports = (client, courseAnn) => {
                   .addFields({
                     name: "___________",
                     value: "[Read More](" + ann.url + ")",
-                  })
-                  .setThumbnail(
-                    "https://scontent-bru2-1.xx.fbcdn.net/v/t1.0-9/46488296_2389319437749114_6505762562989096960_n.jpg?_nc_cat=111&ccb=2&_nc_sid=09cbfe&_nc_ohc=a58UoF9Yv_cAX-4H65n&_nc_ht=scontent-bru2-1.xx&oh=c1b0d140980bd3dc2a474ec029a01170&oe=5FF9B2D6"
-                  )
-                  .setTimestamp()
-                  .setFooter(
-                    "NxT Media Technology",
-                    "https://play-lh.googleusercontent.com/2_M-EEPXb2xTMQSTZpSUefHR3TjgOCsawM3pjVG47jI-BrHoXGhKBpdEHeLElT95060B=s180"
-                  );
+                  });
 
                 db.all(
                   `SELECT course_id, channel_id FROM watchlist;`,
@@ -107,6 +108,7 @@ module.exports = (client, courseAnn) => {
 
                 //update DateTime so you have a reference when the last post on discord was posted, prevent posting doubles
                 db.run(`UPDATE courses SET posted_at=` + JSON.stringify(ann.posted_at) + ` WHERE course_id = ` + JSON.stringify(course.course_id)), (err, row) => {
+                  
                     if (err) {
                       
                       console.error(err.message);
