@@ -68,7 +68,7 @@ module.exports = function () {
                 data.forEach((element) => {
                   //Insert data into table courses 
                   //we used DATETIME('now') so it wont error at the very first post of announcements
-                  db.run(`INSERT INTO courses (course_name, course_id, posted_at) VALUES (` + JSON.stringify(element.name) + `,` + element.id + `, DATETIME('2022-09-01'))`, (err, row) => {
+                  db.run(`INSERT INTO courses (course_name, course_id, posted_at) VALUES (` + JSON.stringify(element.name) + `,` + element.id + `, DATETIME('now'))`, (err, row) => {
                       if (err) {
                         
                         console.error(err.message);
